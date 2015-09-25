@@ -1,0 +1,8 @@
+&virtual_server_list&virtual_server=name%03Servicio_Web_Policia%02address%03172.26.12.251
+%02status%031%02conn_limit%038000000%02vport_list&vport_list=11%0212
+&11=protocol%0311%02port%0380%02service_group%03Web_Policia:80%02
+cookie_persistence_template%03Persist_Cookie
+&12=protocol%032%02port%03443%02service_group%03Web_Policia_HTTPS:443%02
+ssl_session_id_persistence_template%03Persist_SSLID%02connection_limit
+&connection_limit=status%031%02connection_limit_log%031%02connection_limit%032000000%02
+connection_limit_action%030

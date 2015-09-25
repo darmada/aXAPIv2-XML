@@ -1,0 +1,8 @@
+&service_group_list&service_group=name%03Web_Policia:80%02protocol%032%02status%031%02
+lb_method%032%02health_monitor%03%00%02member_list&member_list=m1%02m2
+&m1=server%03webpolicia1%02port%0380%02status%031
+&m2=server%03webpolicia2%02port%0380%02status%031
+&service_group=name%03Web_Policia_HTTPS:443%02protocol%032%02status%031%02
+lb_method%032%02health_monitor%03%00%02member_list&member_list=m1%02m2
+&m1=server%03webpolicia1%02port%03443%02status%031
+&m2=server%03webpolicia2%02port%03443%02status%031
