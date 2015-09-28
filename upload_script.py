@@ -46,16 +46,12 @@ class A10Device_XML(object):
     Class to abstract aXAPI session creation and method calling using HTTPs POST Requests
     and Responses.
     '''
-    username = ""
-    password = ""
-    session = ""
-    method = ""
-    debug = False
-    def __init__(self, ip, username, password):
+
+    def __init__(self, ip, username, password, debug=False):
         self.ip= ip
         self.username = username
         self.password = password
-        self.session = ""
+        self.debug = debug
     def getSession(self):        
         url = "http://" + self.ip + "/services/rest/V2.1/?method=authenticate&format=url&username=" + self.username + "&password=" + self.password
         if self.debug: print "Generated URL: " + url
@@ -65,22 +61,23 @@ class A10Device_XML(object):
         data = ConvertXmlToDict(content)['response']
         # A library to parse the returned XML object to a python dictionary is required
         # to extract the session_id from the response
-        session_id = data['session_id']
-        print "Session Created. Session ID: " + session_id
-        self.session= session_id
+        self.session_id = data['session_id']
+        print "Session Created. Session ID: " + self.session_id
     def closeSession(self):
-        if self.debug: print "Closing Session: "+ self.session
-        url = "http://" + self.ip + "/services/rest/V2.1/?session_id=" + self.session + "&format=url&method=session.close"
+        if self.debug: print "Closing Session: "+ self.session_id
+        url = "http://" + self.ip + "/services/rest/V2.1/?session_id=" + self.session_id + "&format=url&method=session.close"
         if self.debug: print "Generated URL: " + url
         rsp = urllib2.urlopen(url)
         content = rsp.read()
         print "Result: " + content
     def genericPostApi(self,slb_data):
-        url = "http://"+self.ip+"/services/rest/V2.1/?session_id=" + self.session + "&format=url&method="+ self.method + slb_data
+        url = "http://"+self.ip+"/services/rest/V2.1/?session_id=" + self.session_id + "&format=url&method="+ self.method + slb_data
         if self.debug: print "Generated URL: " + url
         rsp = urllib2.urlopen(url)
         content = rsp.read()
         print (content)
+    def setMethod(self, method):
+    	self.method = method
         
 def main():
     '''
@@ -112,13 +109,13 @@ def main():
     # Get the script directory
     script_dir = os.path.dirname(os.path.realpath(__file__))
     
-    thunder = A10Device_XML(ip_address, username, password) # Initialize with IP, username and password
-    thunder.debug = verbose                             # Turn ON/OFF debug messages
+    # Initialize with IP, username, password and debugging for the instance
+    thunder = A10Device_XML(ip_address, username, password, True)
     thunder.getSession()                                # GET authentication session
  
     for (a_map, file_to_process) in FILE_MAP:
     
-    	thunder.method = METHOD_MAP[a_map]              # SET Method
+    	thunder.setMethod(METHOD_MAP[a_map])              # SET Method
     	
     	with open(script_dir + file_to_process, 'r') as a_file:
         	a_string = a_file.read()
